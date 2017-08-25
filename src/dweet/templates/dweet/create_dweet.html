@@ -1,0 +1,49 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'dweet/css/stylesheet.css' %}">
+
+<body>
+    <div class="search-header">
+        <input type="text" name="search" placeholder="Search Dweet/User" id="id_search_bar" class="search-bar">
+        <button type="button" class="btn btn-info" id="id_search_button">Search</button>
+    </div>
+    <div class="container dweet">
+        <div class="user_info">
+            <img src="">
+            <p> {{ username }}</p>
+            <div id="user_details1">
+                <label>Tweets - {{ dweet_count }}</label><br>
+                <label>Following - </label><br>
+                <label>Followers - </label>
+            </div>
+        </div>
+        <div class="dweet_container">
+            <div class="add_dweet">
+                <textarea id="dweet_content" maxlength="140" class="dweet_content" rows="4" cols="50" placeholder="What's going on?"></textarea>
+                <button type="button" name="dweet" id="create_dweet" class="btn btn-info btn-xs">Dweet</button>
+            </div>
+            <div class="view_dweets">
+                {% for dweet in dweet_list %}
+                    <div class="dweet_detail">
+                        <label> {{ dweet.username}} - </label><label style="color:grey;"> {{ dweet.dweeted_at|timesince }} ago</label><br>
+                        <label> {{ dweet.content}} </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    window.userId = "{{ user_id }}";
+    window.username = "{{ username }}";
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{% static 'dweet/js/create_dweet.js' %}"></script>
+
+{% endblock %}

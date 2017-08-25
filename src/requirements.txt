@@ -1,0 +1,4 @@
+django==1.10.3
+mysqlclient
+requests==2.6.0
+django-suit==0.2.25

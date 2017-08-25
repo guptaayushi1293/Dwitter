@@ -1,0 +1,68 @@
+.dweet {
+    background-color: #e9e9e9;
+    display: flex;
+    flex-direction:row;
+    border: 1px solid #898989;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.create_dweet_div {
+    length: 30%;
+    width: 75%;
+}
+
+.user_info {
+    margin: 2px;
+    height:40%;
+    width:25%;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.add_dweet {
+    align:center;
+}
+
+.view_dweets {
+    align: center;
+}
+
+.dweet_content {
+    border-radius: 10px;
+    border: 1px solid grey;
+    padding: 10px;
+    align:center;
+}
+
+.dweet_container {
+    margin: 2px;
+    length:100%;
+    width:50%;
+    float:right;
+    position:relative;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.dweet_detail {
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.search_div {
+    display: inline-block;
+    height: 10%;
+}
+
+.search-bar {
+    width: 30%;
+    margin: 5px;
+}
+
+.search-header {
+    width: 50%;
+}
