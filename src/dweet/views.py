@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from .models import *
 from django.db.models import Q
+from django.contrib.auth.models import User
 # Create your views here.
 
 
@@ -13,15 +14,21 @@ from django.db.models import Q
 def create_dweet_view(request):
     user_id = request.user.id
     user_dweet_count = 0
+    user_following_count = 0
+    user_follower_count = 0
     context = {
         "user_id": user_id,
         "username": request.user.username
     }
     dweet_list = []
     try:
-        dweets = Dweet.objects.filter(user_id_id=user_id).order_by('-dweeted_at')
-        user_dweet_count = dweets.count()
+        following = FollowUser.objects.filter(followed_by_id=user_id)
+        user_following_count = following.count()
+        dweets = Dweet.objects.filter(Q(user_id_id=user_id) |
+                                      Q(user_id_id__in=[follow_object.followed_to_id for follow_object in following])).order_by('-dweeted_at')
         for dweet in dweets:
+            if dweet.user_id_id == user_id:
+                user_dweet_count += 1
             dweet_obj = {
                 'id': dweet.id,
                 'username': dweet.user_id.username,
@@ -43,6 +50,10 @@ def create_dweet_view(request):
             dweet_list.append(dweet_obj)
         context['dweet_list'] = dweet_list
         context['dweet_count'] = user_dweet_count
+        followers = FollowUser.objects.filter(followed_to_id=user_id)
+        user_follower_count = followers.count()
+        context['following_count'] = user_following_count
+        context['follower_count'] = user_follower_count
         return render(request, "dweet/create_dweet.html", context)
     except Exception as exception:
         print("Exception occurred while getting dweet feed : %s" %exception)
@@ -206,6 +217,7 @@ def add_comment(request):
         }), content_type='application/json')
 
 
+@csrf_exempt
 def get_comments(request, dweet_id):
     comments = []
     try:
@@ -237,13 +249,29 @@ def get_comments(request, dweet_id):
         }), content_type='application/json')
 
 
+@csrf_exempt
 def follow_user(request):
+    user_id = request.user.id
     try:
         if request.method == "POST":
-            return HttpResponse(json.dumps({
-                'statusCode': 0,
-                'statusMessage': "Operation successful."
-            }), content_type='application/json')
+            data = json.loads(request.POST.get('data'))
+            follow_to = int(data['followed_to_id'])
+            follow_by = user_id
+            try:
+                follow_object = FollowUser()
+                follow_object.followed_by_id = follow_by
+                follow_object.followed_to_id = follow_to
+                follow_object.save()
+                return HttpResponse(json.dumps({
+                    'statusCode': 0,
+                    'statusMessage': "Followed successfully."
+                }), content_type='application/json')
+            except Exception as exception:
+                print("Exception occurred while following a user : %s" % exception)
+                return HttpResponse(json.dumps({
+                    'statusCode': 1,
+                    'statusMessage': "Exception occurred while following a user : %s" % exception
+                }), content_type='application/json')
         else:
             return HttpResponse(json.dumps({
                 'statusCode': 1,
@@ -254,4 +282,83 @@ def follow_user(request):
         return HttpResponse(json.dumps({
             'statusCode': 1,
             'statusMessage': "Exception occurred while following a user : %s" % exception
+        }), content_type='application/json')
+
+
+@csrf_exempt
+def show_following(request):
+    context = {}
+    user_id = request.user.id
+    following_user_list = []
+    try:
+        if request.method == "GET":
+            following_users = FollowUser.objects.filter(followed_by_id=user_id)
+            for following_user in following_users:
+                following_user_object = {
+                    'followed_to_id': following_user.followed_to_id,
+                    'followed_to_name': following_user.followed_to.username
+                }
+                following_user_list.append(following_user_object)
+            context['following_user_list'] = following_user_list
+            return render(request, "dweet/following_user_list.html", context)
+        else:
+            return render(request, "dweet/following_user_list.html", context)
+    except Exception as exception:
+        print("Exception occurred while getting list of users whom you follow : %s" % exception)
+        return render(request, "dweet/following_user_list.html", context)
+
+
+@csrf_exempt
+def show_follower(request):
+    context = {}
+    user_id = request.user.id
+    follower_user_list = []
+    try:
+        if request.method == "GET":
+            follower_users = FollowUser.objects.filter(followed_to_id=user_id)
+            for follower_user in follower_users:
+                follower_user_object = {
+                    'followed_by_id': follower_user.followed_by_id,
+                    'followed_by_name': follower_user.followed_by.username
+                }
+                follower_user_list.append(follower_user_object)
+            context['follower_user_list'] = follower_user_list
+            return render(request, "dweet/follower_user_list.html", context)
+        else:
+            return render(request, "dweet/follower_user_list.html", context)
+    except Exception as exception:
+        print("Exception occurred while getting list of followers : %s" % exception)
+        return render(request, "dweet/follower_user_list.html", context)
+
+
+@csrf_exempt
+def unfollow_user(request):
+    user_id = request.user.id
+    try:
+        if request.method == "POST":
+            data = json.loads(request.POST.get('data'))
+            followed_to_id = int(data['followed_to_id'])
+            try:
+                follow_user = FollowUser.objects.get(Q(followed_by_id=user_id) & Q(followed_to_id=followed_to_id))
+                follow_user.delete()
+                return HttpResponse(json.dumps({
+                    'statusCode': 0,
+                    'statusMessage': "You un-followed a user successfully."
+                }), content_type='application/json')
+            except Exception as exception:
+                print("Exception occurred while removing follow-ship : %s" % exception)
+                return HttpResponse(json.dumps({
+                    'statusCode' : 1,
+                    'statusMessage': "Exception occurred while removing follow-ship : %s" % exception
+                }), content_type='application/json')
+        else:
+            return HttpResponse(json.dumps({
+                'statusCode': 1,
+                'statusMessage': "Not a POST method."
+            }), content_type='application/json')
+    except Exception as exception:
+        print("Exception occurred while un-following a particular user : %s" % exception)
+        return HttpResponse(json.dumps({
+            'statusCode': 1,
+            'statusMessage': "Exception occurred while un-following a particular user : %s" % exception
         }), content_type='application/json')

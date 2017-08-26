@@ -14,11 +14,13 @@
     <div class="container dweet">
         <div class="user_info">
             <img src="">
-            <p> {{ username }}</p>
+            <p style="margin: 10px; color: #337ab7;"> {{ username }}</p>
             <div id="user_details1">
-                <label>Tweets - {{ dweet_count }}</label><br>
-                <label>Following - </label><br>
-                <label>Followers - </label>
+                <a href="/dweet/{{ user_id }}" class="btn btn-link btn-sm" id="show_user_dweets">Dweets</a><span id="dweets_data"> - {{ dweet_count}}</span>
+                <br>
+                <a href="/dweet/user/following/" class="btn btn-link btn-sm" id="following_link">Following</a><span id="following_data"> - {{ following_count}}</span>
+                <br>
+                <a href="/dweet/user/follower/" class="btn btn-link btn-sm" id="follower_link">Followers</a><span id="follower_data"> - {{ follower_count}}</span>
             </div>
         </div>
         <div class="dweet_container">
