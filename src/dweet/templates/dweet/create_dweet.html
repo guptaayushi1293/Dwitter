@@ -5,11 +5,11 @@
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'dweet/css/stylesheet.css' %}">
-
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <body>
     <div class="search-header">
         <input type="text" name="search" placeholder="Search Dweet/User" id="id_search_bar" class="search-bar">
-        <button type="button" class="btn btn-info" id="id_search_button">Search</button>
+        <button type="button" class="btn btn-xs btn-info" id="id_search_button">Search</button>
     </div>
     <div class="container dweet">
         <div class="user_info">
@@ -23,19 +23,65 @@
         </div>
         <div class="dweet_container">
             <div class="add_dweet">
-                <textarea id="dweet_content" maxlength="140" class="dweet_content" rows="4" cols="50" placeholder="What's going on?"></textarea>
-                <button type="button" name="dweet" id="create_dweet" class="btn btn-info btn-xs">Dweet</button>
+                <textarea id="dweet_content" maxlength="140" class="dweet_content" rows="4" cols="55" placeholder="What's going on?"></textarea>
+                <button type="button" name="dweet" id="create_dweet" class="btn btn-info btn-xs dweet-btn">Dweet</button>
             </div>
             <div class="view_dweets">
                 {% for dweet in dweet_list %}
                     <div class="dweet_detail">
-                        <label> {{ dweet.username}} - </label><label style="color:grey;"> {{ dweet.dweeted_at|timesince }} ago</label><br>
-                        <label> {{ dweet.content}} </label>
+                        <div class="dweet_log">
+                            <label> {{ dweet.username}} - </label><label style="color:grey;"> {{ dweet.dweeted_at|timesince }} ago</label><br>
+                        </div>
+                        <div class="dweet_content_div"><label> {{ dweet.content}} </label> </div>
+                        <div class="dweet_action_buttons">
+                            <button type="button" name="comment" id="comment_{{dweet.id}}" class="btn btn-link btn-xs dweet_comment_btn">Comment</button>
+                            <label class="comment_count"> ( {{ dweet.comment_count }} ) </label>
+                            <button type="button" name="like" id="like_{{dweet.id}}" class="btn btn-link btn-xs dweet_like_btn">Like</button>
+                            <label class="like_count"> ( {{ dweet.like_count }} ) </label>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-xs" id="reply" style="float:left;">Reply</button>
+                    <button type="button" class="btn btn-info btn-xs" data-dismiss="modal" style="float:right;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="openDweetModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <label></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-xs" data-dismiss="modal" style="float:right;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 <script type="text/javascript">
@@ -43,7 +89,8 @@
     window.username = "{{ username }}";
 </script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{% static 'dweet/js/create_dweet.js' %}"></script>
 
 {% endblock %}

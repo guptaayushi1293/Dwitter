@@ -66,3 +66,46 @@
 .search-header {
     width: 50%;
 }
+
+.dweet_log {
+    margin: 2px;
+    padding: 2px;
+}
+
+.dweet_content_div {
+    margin: 2px;
+    padding: 2px;
+}
+
+.dweet_action_buttons {
+    margin: 2px;
+    padding: 2px;
+}
+
+.dweet_comment_btn {
+
+}
+
+.dweet_like_btn {
+
+}
+
+.dweet-btn {
+    margin: 5px;
+}
+
+.prev-comment-div {
+    width: 75%;
+    margin: 2px;
+    padding: 2px;
+    background-color: #bebebe;
+    border: 1px solid grey;
+    border-radius: 5px;
+    display: flex;
+    flex-direction:column;
+}
+
+.comment-log-div {
+    display: flex;
+    flex-direction: row;
+}
