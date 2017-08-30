@@ -59,12 +59,11 @@
 }
 
 .search-bar {
-    width: 30%;
     margin: 5px;
 }
 
 .search-header {
-    width: 50%;
+    float:right;
 }
 
 .dweet_log {

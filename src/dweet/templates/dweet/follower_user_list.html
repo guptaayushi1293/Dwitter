@@ -1,18 +1,13 @@
-{% extends "admin/base_site.html" %}
-
 {% load static %}
 
 {% block content %}
+
+{% include "dweet/navigationBar.html" %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'dweet/css/follower_user_list_stylesheet.css' %}">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <body>
-    <div class="search-header">
-        <input type="text" name="search" placeholder="Search Dweet/User" id="id_search_bar" class="search-bar">
-        <button type="button" class="btn btn-xs btn-info" id="id_search_button">Search</button>
-    </div>
-
     <div id="container">
         {% if follower_user_list %}
             {% for follower_user in follower_user_list %}
@@ -28,6 +23,8 @@
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'dweet/js/common.js' %}"></script>
+<script type="text/javascript" src="{% static 'dweet/js/navigationBar.js' %}"></script>
 <script type="text/javascript" src="{% static 'dweet/js/follower_user_list.js' %}"></script>
 
 {% endblock %}

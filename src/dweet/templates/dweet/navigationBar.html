@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+background-color:#4CAF50;
+}
+</style>
+</head>
+<body>
+
+<ul>
+    <li><a class="active" href="/dweet/create/">Dwitter</a></li>
+        <div class="search-header">
+            <input type="text" name="search" placeholder="Search Dweet/User" id="id_search_bar" class="search-bar">
+            <a href="" id="id_search_link" class="btn btn-info btn-xs">Search</a>
+            <button type="button" class="btn btn-xs btn-info" id="login_btn"> Login </button>
+            <button type="button" class="btn btn-xs btn-info" id="logout_btn"> Logout </button>
+            <button type="button" class="btn btn-xs btn-info" id="register_btn"> Register </button>
+        </div>
+</ul>
+
+</body>
+</html>

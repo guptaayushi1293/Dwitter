@@ -1,16 +1,13 @@
-{% extends "admin/base_site.html" %}
-
 {% load static %}
 
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'dweet/css/stylesheet.css' %}">
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+{% include "dweet/navigationBar.html" %}
+
 <body>
-    <div class="search-header">
-        <input type="text" name="search" placeholder="Search Dweet/User" id="id_search_bar" class="search-bar">
-        <button type="button" class="btn btn-xs btn-info" id="id_search_button">Search</button>
-    </div>
     <div class="container dweet">
         <div class="user_info">
             <img src="">
@@ -93,6 +90,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{% static 'dweet/js/navigationBar.js' %}"></script>
 <script type="text/javascript" src="{% static 'dweet/js/create_dweet.js' %}"></script>
 
 {% endblock %}

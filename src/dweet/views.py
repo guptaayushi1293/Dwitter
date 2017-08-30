@@ -362,3 +362,57 @@ def unfollow_user(request):
             'statusCode': 1,
             'statusMessage': "Exception occurred while un-following a particular user : %s" % exception
         }), content_type='application/json')
+
+
+@csrf_exempt
+def show_search_results(request, search):
+    user_id = 4
+    print(search)
+    context = {}
+    dweet_list = []
+    follow_user_list = []
+    not_follow_user_list = []
+    user_list = {}
+    try:
+        user = User.objects.get(id=user_id)
+        follow_users = FollowUser.objects.filter(followed_by_id=user_id).filter(followed_to__username__icontains=search)
+
+        for user_obj in follow_users:
+            follow_user_obj = {
+                'id': user_obj.followed_to_id,
+                'username': user_obj.followed_to.username
+            }
+            follow_user_list.append(follow_user_obj)
+        print follow_user_list
+        not_follow_users = User.objects.filter(username__icontains=search).exclude(id=user_id)\
+            .exclude(id__in=[follow_object.followed_to_id for follow_object in follow_users])
+        for user_obj in not_follow_users:
+            not_follow_user_obj = {
+                'id': user_obj.id,
+                'username': user_obj.username
+            }
+            not_follow_user_list.append(not_follow_user_obj)
+        user_list['follow_users'] = follow_user_list
+        user_list['not_follow_users'] = not_follow_user_list
+
+        following = FollowUser.objects.filter(followed_by_id=user_id)
+        print(following)
+        dweets = Dweet.objects.filter(Q(user_id_id=user_id) |
+                                      Q(user_id_id__in=[follow_object.followed_to_id for follow_object in
+                                                        following])).filter(content__icontains=search).order_by('-dweeted_at')
+        for dweet in dweets:
+            dweet_object = {
+                'id': dweet.id,
+                'username': dweet.user_id.username,
+                'content': dweet.content,
+                'dweeted_at': dweet.dweeted_at
+            }
+            dweet_list.append(dweet_object)
+        context['users'] = user_list
+        context['dweets'] = dweet_list
+        print(context)
+        return render(request, "dweet/search_result.html", context)
+    except Exception as exception:
+        print("Exception occurred while getting search results : %s" % exception)
+        return render(request, "dweet/search_result.html", context)
+    pass

@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^(?P<user_id>\d+)/$', get_dweets, name="get_dweets"),
     url(r'^user/following/$', show_following, name="show_following"),
     url(r'^user/follower/$', show_follower, name="show_follower"),
+    url(r'^search/(?P<search>[\w\-]+)/$', show_search_results, name="show_search_results"),
 ]

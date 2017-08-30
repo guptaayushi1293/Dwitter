@@ -1,0 +1,89 @@
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'dweet/css/stylesheet.css' %}">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+{% include "dweet/navigationBar.html" %}
+
+<style type="text/css">
+    .main-div {
+        display: flex;
+    }
+    .dweet-div {
+        border: 1px solid grey;
+        border-radius: 5px;
+        width:50%;
+        padding:5px;
+        background-color: #dedede;
+        margin: 5px;
+    }
+    .user-div {
+        border: 1px solid grey;
+        border-radius: 5px;
+        width:50%;
+        padding:5px;
+        background-color: #dedede;
+        margin: 5px;
+        display: flex;
+        flex-direction:column;
+    }
+    .user-details {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
+    .unfollow-btn {
+    }
+    .follow-btn {
+    }
+</style>
+
+<body>
+    <div id="container" class="main-div">
+        <div class="dweet-div">
+            {% if dweets %}
+                {% for dweet in dweets %}
+                    <div class="dweet_detail">
+                        <div class="dweet_log">
+                            <label> {{ dweet.username}} - </label><label style="color:grey;"> {{ dweet.dweeted_at|timesince }} ago</label><br>
+                        </div>
+                        <div class="dweet_content_div"><label> {{ dweet.content}} </label> </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p> No dweets found. </p>
+            {% endif %}
+        </div>
+        <div class="user-div">
+            {% if users %}
+                {% if users.follow_users %}
+                    {% for user in users.follow_users %}
+                        <div class="user-details">
+                            <span style="float:left;"> {{ user.username }} </span>
+                            <button id="unfollow_{{user.id}}" class="btn btn-info btn-xs unfollow-btn" style="float:right;"> Unfollow </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% if users.not_follow_users %}
+                    {% for user in users.not_follow_users %}
+                        <div class="user-details">
+                            <span style="float:left;"> {{ user.username }} </span>
+                            <button id="follow_{{user.id}}" class="btn btn-info btn-xs follow-btn" style="float:right;"> Follow </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <p> No users found </p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{% static 'dweet/js/navigationBar.js' %}"></script>
+<script type="text/javascript" src="{% static 'dweet/js/common.js' %}"></script>
+<script type="text/javascript" src="{% static 'dweet/js/search_result.js' %}"></script>
+{% endblock %}
